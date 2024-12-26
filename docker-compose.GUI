@@ -1,0 +1,7 @@
+services:
+  common:
+    working_dir: /root/GUI
+    ports:
+      -3000:3000
+    volumes:
+      -./GUI:/root/GUI
