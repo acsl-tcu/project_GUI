@@ -39,7 +39,7 @@ const Rosconnection: React.FC<RosConnectionProps> = ({ rosUrl, rosDomainId, setR
     };
   }, [rosUrl, rosDomainId, setRos]);
 
-  return (<div></div>);
+  return (<div>"no ROS connection" </div>);
 }
 
 export default Rosconnection;
