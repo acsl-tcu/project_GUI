@@ -1,7 +1,8 @@
 "use client"
 import Image from "next/image";
 import React, { useState } from 'react';
-// import CameraData from './components/CameraData';
+import CameraData from '../components/CameraData';
+import RosCmd from '../components/CMD';
 import Rosconnection from '../components/RosConnection';
 //import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row, Col, ToggleButton, ToggleButtonGroup, Button } from 'react-bootstrap';
@@ -48,14 +49,14 @@ export default function Home() {
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <ToggleButtonGroupControlled />
         <div className="flex gap-4 items-center flex-col sm:flex-row">
-          {/* <Rosconnection rosUrl="ws://localhost:9090" rosDomainId="89"> */}
           <Rosconnection rosUrl="ws://localhost:9090" rosDomainId={66} setRos={setRos} />
-          {ros &&
+          <h1>ROS Control Panel</h1>           {ros &&
             <>
+              (<RosCmd ros={ros} />)
               <Row>
                 <Col>
                   <div className="d-flex justify-content-center align-items-center">
-                    {/* <CameraData ros={ros} /> */}
+                    <CameraData ros={ros} />
                   </div>
                 </Col>
               </Row>
