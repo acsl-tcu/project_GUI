@@ -4,13 +4,49 @@ import React, { useState } from 'react';
 // import CameraData from './components/CameraData';
 import Rosconnection from '../components/RosConnection';
 //import 'bootstrap/dist/css/bootstrap.min.css';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, ToggleButton, ToggleButtonGroup, Button } from 'react-bootstrap';
+
+function ToggleButtonGroupControlled() {
+  const [value, setValue] = useState([1, 3]);
+
+  /*
+   * The second argument that will be passed to
+   * `handleChange` from `ToggleButtonGroup`
+   * is the SyntheticEvent object, but we are
+   * not using it in this example so we will omit it.
+   */
+  const handleChange = (val) => setValue(val);
+
+  return (
+    <ToggleButtonGroup type="radio" name="options" defaultValue={value} value={value} onChange={handleChange}>
+      <ToggleButton id="tbg-btn-1" value={1}>
+        Option 1
+      </ToggleButton>
+      <ToggleButton id="tbg-btn-2" value={2}>
+        Option 2
+      </ToggleButton>
+      <ToggleButton id="tbg-btn-3" value={3}>
+        Option 3
+      </ToggleButton>
+      <div className="d-grid gap-2">
+        <Button variant="primary" size="lg">
+          Block level button
+        </Button>
+        <Button variant="secondary" size="lg">
+          Block level button
+        </Button>
+      </div>
+    </ToggleButtonGroup>
+  );
+}
+
 
 export default function Home() {
   const [ros, setRos] = useState(null);
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+        <ToggleButtonGroupControlled />
         <div className="flex gap-4 items-center flex-col sm:flex-row">
           {/* <Rosconnection rosUrl="ws://localhost:9090" rosDomainId="89"> */}
           <Rosconnection rosUrl="ws://localhost:9090" rosDomainId={66} setRos={setRos} />
