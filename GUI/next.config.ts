@@ -1,7 +1,14 @@
-import type { NextConfig } from "next";
+import { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+    turbo: {
+      resolveAlias: {
+        underscore: 'lodash',
+        mocha: { browser: 'mocha/browser-entry.js' },
+      },
+    },
+  },
 };
 
 export default nextConfig;

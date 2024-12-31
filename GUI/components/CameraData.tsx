@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import ROSLIB from 'roslib';
-import Card from 'react-bootstrap/Card';
 
 interface CameraDataProps {
   ros: ROSLIB.Ros | null;
@@ -26,22 +25,22 @@ const CameraData: React.FC<CameraDataProps> = ({ ros }) => {
       setImgData(data);
     });
 
-    return () => {
-      image.unsubscribe();
-    };
+    // return () => {
+    //   image.unsubscribe();
+    // };
   }, [ros]);
 
   return (
     <>
-      <Card className="mb-4" style={{ width: '48rem' }}>
-        <Card.Body>
-          <Card.Title>Camera Image</Card.Title>
-          <Card.Subtitle className="mb-2 text-muted">Subscribe image_raw</Card.Subtitle>
-          <Card.Text>
-            <img src={imgData} alt="Camera Data" />
-          </Card.Text>
-        </Card.Body>
-      </Card>
+      <div className="mb-4 w-[48rem] bg-white rounded-lg shadow-lg">
+        <div className="p-4">
+          <h2 className="text-xl font-bold">Camera Image</h2>
+          <h3 className="mb-2 text-gray-600">Subscribe image_raw</h3>
+          <div>
+            <img src={imgData || null} alt="Camera Data" />
+          </div>
+        </div>
+      </div>
     </>
   );
 }
