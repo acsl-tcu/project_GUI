@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import ROSLIB from 'roslib';
-import bld_data from '../../floor_map.json';
+import bld_data from '@/components/floor_map.json';
 interface RosDataButtonProps {
   ros: ROSLIB.Ros | null;
   data_key: number;
