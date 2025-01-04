@@ -15,3 +15,7 @@ acsl init GUI 87
 
 ### Usage (Manual execute)
 
+```bash
+acsl GUI
+dup all # initial run will takes few minutes
+```
