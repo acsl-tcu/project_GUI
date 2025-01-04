@@ -31,7 +31,7 @@ export default function Home() {
               </button>))}
           </div>
         </div>
-        <div key="SetTarget" className="grid grid-cols-4 gap-4 content-stretch py-2">
+        <div key="SetTarget" className="grid grid-cols-[repeat(auto-fill,minmax(theme(spacing.60),1fr))] gap-4 content-stretch py-2">
           {places.map((i) => {
             return (<RosDataButton key={"Robot" + rid + "-" + i} ros={ros} data_key={floor} rid={rid} contents={i} selected={room} setSelected={setRoom} />);
           })}
