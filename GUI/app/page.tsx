@@ -4,7 +4,8 @@ import CameraData from '../components/CameraData';
 import RosCmd from '../components/CMD';
 import Rosconnection from '../components/RosConnection';
 import RosDataButton from '../components/RosDataButton';
-import bld_data from '../components/floor_map.json';
+//import bld_data from '../components/floor_map.json';
+import bld_data from '../../floor_map.json';
 
 //  grid-rows-[20px_1fr_20px] 
 export default function Home() {
