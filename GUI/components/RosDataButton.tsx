@@ -27,7 +27,7 @@ const RosDataButton: React.FC<RosDataButtonProps> = ({ ros, data_key, rid, conte
 
   return (
     <div className="flex justify-center items-center col-span-1" key={"Button" + data_key + contents} >
-      <button className={`px-2 py-1 ${contents === selected ? "text-white bg-green-500" : "text-green-500"} text-destructive-foreground border border-green-500 font-semibold rounded hover:bg-green-100 active:border-b-0`} onClick={handleClick}>{contents}</button>
+      <button className={`py-2 ${contents === selected ? "text-white bg-green-500" : "text-green-500"} w-full text-destructive-foreground border border-green-500 font-semibold rounded hover:bg-green-100 active:border-b-0`} onClick={handleClick}>{contents}</button>
     </div >
   );
 }
