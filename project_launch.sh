@@ -6,5 +6,7 @@ echo $ROS_DOMAIN_ID
 
 dup rosbridge
 dup GUI
+
+echo "sleep 10 seconds"
 sleep 10
 dup chrome
