@@ -45,13 +45,10 @@ RUN add-apt-repository ppa:xtradeb/apps -y\
   && apt install -y chromium
 
 # RUN apt update && apt install -y dumb-init
+# for jazzy@arm64
 RUN pip install -U --break-system-packages dumb-init
 
+# for amd64
 RUN apt update && apt install -y python3-pip wget\
   &&  wget -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64\
   && chmod +x /usr/local/bin/dumb-init
-
-# RUN npm install roslib \
-#   && npm install react-bootstrap bootstrap
-# npm install --save chart.js react-chartjs-2
-# npm install three @types/three @react-three/fiber
