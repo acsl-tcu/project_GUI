@@ -13,4 +13,4 @@ echo "KIOSK START"
 #   adduser -m -u ${hostUID} -g ${hostGID} dstudent
 #   su dstudent
 # fi
-$(echo "exec chromium --enable-features=WebUIDarkMode --force-dark-mode http://localhost:3000 --kiosk --no-sandbox")
+$(echo "exec chromium --disable-background-mode --enable-features=WebUIDarkMode --force-dark-mode http://localhost:3000 --kiosk --no-sandbox")

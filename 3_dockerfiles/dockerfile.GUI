@@ -42,7 +42,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN add-apt-repository ppa:xtradeb/apps -y\
   && apt update\
-  && apt install -y chromium
+  && apt install -y chromium unclutter
 
 # RUN apt update && apt install -y dumb-init
 # for jazzy@arm64
