@@ -28,8 +28,9 @@ RUN colcon mixin add default \
   colcon metadata update
 
 # install ros2 packages
+# ros-jazzy-ros-base=0.11.0-1*
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  ros-jazzy-ros-base=0.11.0-1* \
+  ros-jazzy-ros-base \
   ros-${ROS_DISTRO}-rosbridge-suite \
   && rm -rf /var/lib/apt/lists/*
 
