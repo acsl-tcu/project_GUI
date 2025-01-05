@@ -2,3 +2,4 @@ services:
   common:
     environment:
       - hostUID=${UID}
+      - hpath=`pwd`
