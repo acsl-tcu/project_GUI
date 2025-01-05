@@ -2,3 +2,4 @@ services:
   common:
     environment:
       - hostUID=$hostUID
+      - hostGID=$hostGID
