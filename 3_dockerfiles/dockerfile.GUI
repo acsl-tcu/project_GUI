@@ -11,6 +11,7 @@ SHELL [ "/bin/bash","-c" ]
 RUN apt-get update && apt-get install --no-install-recommends -y \
   build-essential \
   software-properties-common \
+  add-apt-repository \
   ssh \
   git \
   nodejs \
