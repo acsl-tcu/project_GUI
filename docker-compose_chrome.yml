@@ -3,3 +3,5 @@ services:
     environment:
       - hostUID=$hostUID
       - hostGID=$hostGID
+    volumes:
+      - $HOME/.Xauthority:/root/.Xauthority
