@@ -9,5 +9,6 @@ dup GUI
 
 echo "sleep 10 seconds"
 sleep 10
-unclutter -idle 0.1 -root
+#unclutter -idle 0.1 -root
 dup chrome
+echo "complete launch"
