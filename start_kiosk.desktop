@@ -2,5 +2,5 @@
 Type=Application
 Name=start_kiosk
 MimeType=text/html;
-Exec=/home/sekiguchi/GUI/project_launch.sh
+Exec=ACSL_WORK_DIR/project_launch.sh
 Terminal=true
