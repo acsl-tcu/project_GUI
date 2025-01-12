@@ -4,9 +4,11 @@ sed -i "s|\$ACSL_WORK_DIR|$ACSL_WORK_DIR|g" project_launch*.sh
 sed -i "s|\$ACSL_ROS2_DIR|$ACSL_ROS2_DIR|g" project_launch*.sh
 
 dup GUI
-sed -i "s/ACSL_WORK_DIR/${ACSL_WORK_DIR}/" ./start_kiosk.desktop
+
+sed -i "s|ACSL_WORK_DIR|${ACSL_WORK_DIR}|" ./start_kiosk.desktop
 desktop-file-install --dir=$HOME/.local/share/applications ./start_kiosk.desktop
 update-desktop-database -v ~/.local/share/applications
 
+source $ACSL_ROS2_DIR/4_docker/common/scripts/super_echo
 gecho After display "Ready", reboot the system
 dlogs GUI
