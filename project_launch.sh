@@ -1,5 +1,5 @@
 #! /usr/bin/bash +x
-
+cd $ACSL_WORK_DIR
 source $ACSL_ROS2_DIR/bashrc
 echo $PROJECT
 echo $ROS_DOMAIN_ID
