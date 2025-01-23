@@ -14,7 +14,7 @@ const RosDataButton: React.FC<RosDataButtonProps> = ({ ros, data_key, rid, conte
   const Topic = useRef(new ROSLIB.Topic({
     ros: ros,
     name: '/Robot' + rid + '/console2robot',
-    messageType: 'std_msgs/Int8MultiArray'
+    messageType: 'std_msgs/msg/Int8MultiArray'
   }));
 
   const handleClick = () => {
