@@ -13,7 +13,7 @@ source $ACSL_ROS2_DIR/4_docker/common/scripts/super_echo
 gecho Set autostart file in $HOME/.local/share/applications
 
 sed -i "s|ACSL_WORK_DIR|${ACSL_WORK_DIR}|" ./start_kiosk.desktop
-mkdir ~/.config/autostart
+mkdir -p ~/.config/autostart
 desktop-file-install --dir=$HOME/.config/autostart/ ./start_kiosk.desktop
 update-desktop-database -v $HOME/.config/autostart/
 #desktop-file-install --dir=$HOME/.local/share/applications ./start_kiosk.desktop
