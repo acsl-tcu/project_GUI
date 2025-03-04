@@ -17,7 +17,7 @@ export default function Home() {
   const rid = 1 // robot id : TODO 
   return (
     <main>
-      <Rosconnection rosUrl="ws://localhost:9090" rosDomainId={87} setRos={setRos} />
+      <Rosconnection rosUrl="ws://localhost:9090" rosDomainId={RID_IN_PAGE} setRos={setRos} />
       <br />
       {ros && <>
         <div key="SellectFloor" className="grid grid-cols-1 gap-4  content-stretch py-2">

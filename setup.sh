@@ -3,6 +3,7 @@
 # https://forums.raspberrypi.com/viewtopic.php?t=108958
 sed -i "s|\$ACSL_WORK_DIR|$ACSL_WORK_DIR|g" project_launch*.sh
 sed -i "s|\$ACSL_ROS2_DIR|$ACSL_ROS2_DIR|g" project_launch*.sh
+sed -i "s|RID_IN_PAGE|$ROS_DOMAIN_ID|" GUI/app/page.tsx
 
 dup GUI
 

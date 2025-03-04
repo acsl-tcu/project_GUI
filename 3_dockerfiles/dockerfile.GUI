@@ -22,33 +22,34 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   && rm -rf /var/lib/apt/lists/*
 
 # bootstrap rosdep
-RUN rosdep init && \
-  rosdep update --rosdistro $ROS_DISTRO
+# RUN rosdep init && \
+#   rosdep update --rosdistro $ROS_DISTRO
 
 # setup colcon mixin and metadata
-RUN colcon mixin add default \
-  https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml && \
-  colcon mixin update && \
-  colcon metadata add default \
-  https://raw.githubusercontent.com/colcon/colcon-metadata-repository/master/index.yaml && \
-  colcon metadata update
+# RUN colcon mixin add default \
+#   https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml && \
+#   colcon mixin update && \
+#   colcon metadata add default \
+#   https://raw.githubusercontent.com/colcon/colcon-metadata-repository/master/index.yaml && \
+#   colcon metadata update
 
 # install ros2 packages
 # ros-jazzy-ros-base=0.11.0-1*
-RUN apt-get update && apt-get install -y --no-install-recommends \
-  ros-jazzy-ros-base \
-  ros-${ROS_DISTRO}-rosbridge-suite \
-  && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#   ros-jazzy-ros-base \
+#   ros-${ROS_DISTRO}-rosbridge-suite \
+#   && rm -rf /var/lib/apt/lists/*
 
+# RUN apt update && apt install -y software-properties-common\
 RUN add-apt-repository ppa:xtradeb/apps -y\
   && apt update\
   && apt install -y chromium unclutter
 
-# RUN apt update && apt install -y dumb-init
+RUN apt update && apt install -y dumb-init
 # for jazzy@arm64
-RUN pip install -U --break-system-packages dumb-init
+# RUN pip install -U --break-system-packages dumb-init
 
 # for amd64
-RUN apt update && apt install -y python3-pip wget\
-  &&  wget -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64\
-  && chmod +x /usr/local/bin/dumb-init
+# RUN apt update && apt install -y python3-pip wget\
+#   &&  wget -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64\
+#   && chmod +x /usr/local/bin/dumb-init
