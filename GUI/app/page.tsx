@@ -40,7 +40,7 @@ export default function Home() {
           <div key="MoveVehicle" className="col-span-1">
             <h1 className="flex justify-center">ROS Control Panel</h1>
             <div className="flex justify-center items-center">
-              <RosCmd ros={ros} />
+              <RosCmd ros={ros} rid={rid} />
             </div>
           </div>
           <div key="ViewMap" className="col-span-1">

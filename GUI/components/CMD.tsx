@@ -5,13 +5,18 @@ interface RosCmdProps {
   ros: ROSLIB.Ros | null;
 }
 
-const RosCmd: React.FC<RosCmdProps> = ({ ros }) => {
+const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
   const padRef = useRef<HTMLDivElement>(null);
   const handleRef = useRef<HTMLDivElement>(null);
   const cmdVel = useRef(new ROSLIB.Topic({
     ros: ros,
     name: '/rover_twist',
     messageType: 'geometry_msgs/Twist'
+  }));
+  const Topic = useRef(new ROSLIB.Topic({
+    ros: ros,
+    name: '/Robot' + rid + '/console2robot',
+    messageType: 'std_msgs/msg/Int8MultiArray'
   }));
   const [twist, setTwist] = useState<ROSLIB.Message>(new ROSLIB.Message({
     linear: { x: 0, y: 0, z: 0 },
@@ -53,8 +58,8 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros }) => {
       const nx = ((x - cx) / r);
       const ny = ((cy - y) / r);
       setTwist(new ROSLIB.Message({
-        linear: { x: parseFloat(ny.toFixed(3)), y: 0, z: 0 },
-        angular: { x: 0, y: 0, z: -parseFloat(nx.toFixed(3)) }
+        linear: { x: parseFloat(ny.toFixed(3)), y: 0.0, z: 0.0 },
+        angular: { x: 0.0, y: 0.0, z: -parseFloat(nx.toFixed(3)) }
       }));
       cmdVel.current.publish(twist);
     };
@@ -65,10 +70,13 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros }) => {
       handle.style.left = '100px';
       handle.style.top = '100px';
       setTwist(new ROSLIB.Message({
-        linear: { x: 0, y: 0, z: 0 },
-        angular: { x: 0, y: 0, z: 0 }
+        linear: { x: 0.0, y: 0.0, z: 0.0 },
+        angular: { x: 0.0, y: 0.0, z: 0.0 }
       }));
       cmdVel.current.publish(twist);
+
+      const msg = new ROSLIB.Message({ layout: { dim: [{ label: "length", size: 2, stride: 2 }], data_offset: 0 }, data: [0, 0] });
+      Topic.current.publish(msg);
     };
 
     handle.addEventListener('mousedown', (e: MouseEvent) => {
