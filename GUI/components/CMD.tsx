@@ -92,8 +92,6 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
     };
 
     const stopHandle = (e: MouseEvent | TouchEvent, timestamp: number) => {
-      // document.removeEventListener('mousemove', moveHandle);
-      // document.removeEventListener('mouseup', stopHandle);
       handle.style.left = '100px';
       handle.style.top = '100px';
       setTwist(new ROSLIB.Message({
@@ -101,6 +99,8 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
         angular: { x: 0.0, y: 0.0, z: 0.0 }
       }));
       cmdVel.current.publish(twist);
+      removeListeners();
+
 
       const msg = new ROSLIB.Message({ layout: { dim: [{ label: "length", size: 2, stride: 2 }], data_offset: 0 }, data: [0, 0] });
       Topic.current.publish(msg);
