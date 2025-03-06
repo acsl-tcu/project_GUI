@@ -123,21 +123,21 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
       } else {
         return stopHandle(e, now);
       }
-    }, 100);
+    }, 1000);
     const throttledStopHandle = throttle(stopHandle, 100);
 
     const addListeners = () => {
-      handle.addEventListener('mousemove', throttledMoveHandle);
-      handle.addEventListener('mouseup', throttledStopHandle);
-      handle.addEventListener('touchmove', throttledMoveHandle);
-      handle.addEventListener('touchend', throttledStopHandle);
+      document.addEventListener('mousemove', throttledMoveHandle);
+      document.addEventListener('mouseup', throttledStopHandle);
+      document.addEventListener('touchmove', throttledMoveHandle);
+      document.addEventListener('touchend', throttledStopHandle);
     };
 
     const removeListeners = () => {
-      handle.removeEventListener('mousemove', throttledMoveHandle);
-      handle.removeEventListener('mouseup', throttledStopHandle);
-      handle.removeEventListener('touchmove', throttledMoveHandle);
-      handle.removeEventListener('touchend', throttledStopHandle);
+      document.removeEventListener('mousemove', throttledMoveHandle);
+      document.removeEventListener('mouseup', throttledStopHandle);
+      document.removeEventListener('touchmove', throttledMoveHandle);
+      document.removeEventListener('touchend', throttledStopHandle);
     };
 
     const handleMouseDown = addListeners;
