@@ -113,8 +113,8 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
         return stopHandle;
       }
 
-    }, 1000);
-    const throttledStopHandle = throttle(stopHandle, 1000);
+    }, 100);
+    const throttledStopHandle = throttle(stopHandle, 100);
 
     handle.addEventListener('mousedown', (e: MouseEvent) => {
       e.preventDefault();
