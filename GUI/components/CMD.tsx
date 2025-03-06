@@ -40,9 +40,21 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
     // console.log('要素の左端からの距離:', rect.left); // x
     // console.log('要素の下端からの距離:', rect.bottom);
     // console.log('要素の右端からの距離:', rect.right);
-    const moveHandle = (e: MouseEvent) => {
-      let x = e.clientX - padRect.left - handle.offsetWidth / 2;
-      let y = e.clientY - padRect.top - handle.offsetHeight / 2;
+    const moveHandle = (e: MouseEvent | TouchEvent) => {
+      let ex: number;
+      let ey: number;
+      if (e instanceof MouseEvent) {
+        ex = e.clientX;
+        ey = e.clientY;
+      } else if (e instanceof TouchEvent) {
+        ex = e.touches[0].clientX;
+        ey = e.touches[0].clientY;
+      } else {
+        ex = 0.0;
+        ey = 0.0;
+      }
+      let x = ex - padRect.left - handle.offsetWidth / 2;
+      let y = ey - padRect.top - handle.offsetHeight / 2;
       const r = (pad.offsetWidth - handle.offsetWidth) / 2;
       const cx = r, cy = r;
 
@@ -83,6 +95,11 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
       e.preventDefault();
       document.addEventListener('mousemove', moveHandle);
       document.addEventListener('mouseup', stopHandle);
+    });
+    handle.addEventListener('touchstart', (e: MouseEvent) => {
+      e.preventDefault();
+      document.addEventListener('touchmove', moveHandle);
+      document.addEventListener('touchend', stopHandle);
     });
 
     return () => {
