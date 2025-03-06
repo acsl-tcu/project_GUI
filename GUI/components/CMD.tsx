@@ -5,25 +5,6 @@ interface RosCmdProps {
   ros: ROSLIB.Ros | null;
   rid: number;
 }
-// function throttle<T extends (event: Event, now: number) => void>(
-//   callback: T,
-//   limit: number
-// ): (event: Event) => void {
-function throttle<T extends MouseEvent | TouchEvent>(
-  callback: (event: T, now: number) => void,
-  limit: number
-): (event: T) => void {
-  //function throttle<T extends (...args: any[]) => void>(callback: T, limit: number): (...args: Parameters<T>) => void {
-  let lastTime = 0;
-  //(...args: Parameters<T>): void => {
-  return (event: T): void => {
-    const now = Date.now();
-    if (now - lastTime >= limit) {
-      lastTime = now;
-      callback(event, now);
-    }
-  };
-}
 
 const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
   const padRef = useRef<HTMLDivElement>(null);
@@ -39,8 +20,8 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
     messageType: 'std_msgs/msg/Int8MultiArray'
   }));
   const [twist, setTwist] = useState<ROSLIB.Message>(new ROSLIB.Message({
-    linear: { x: 0, y: 0, z: 0 },
-    angular: { x: 0, y: 0, z: 0 }
+    linear: { x: 0.0, y: 0.0, z: 0.0 },
+    angular: { x: 0.0, y: 0.0, z: 0.0 }
   }));
 
   useEffect(() => {
@@ -53,6 +34,20 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
     }
 
     const padRect = pad.getBoundingClientRect();
+
+    function throttle<T extends MouseEvent | TouchEvent>(
+      callback: (event: T, now: number) => void,
+      limit: number
+    ): (event: T) => void {
+      let lastTime = 0;
+      return (event: T): void => {
+        const now = Date.now();
+        if (now - lastTime >= limit) {
+          lastTime = now;
+          callback(event, now);
+        }
+      };
+    }
     // const rect = pad.getBoundingClientRect();
     // console.log('要素の幅:', rect.width);
     // console.log('要素の高さ:', rect.height);
@@ -90,7 +85,7 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
       const nx = Math.max(-0.3, Math.min(0.3, ((x - cx) / r)));
       const ny = Math.min(0.5, ((cy - y) / r));
       setTwist(new ROSLIB.Message({
-        linear: { x: parseFloat(ny.toFixed(3)), y: 0.0, z: timestamp },
+        linear: { x: parseFloat(ny.toFixed(3)), y: 0.0, z: 0.0 },
         angular: { x: 0.0, y: 0.0, z: -parseFloat(nx.toFixed(3)) }
       }));
       cmdVel.current.publish(twist);
@@ -102,7 +97,7 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
       handle.style.left = '100px';
       handle.style.top = '100px';
       setTwist(new ROSLIB.Message({
-        linear: { x: 0.0, y: 0.0, z: timestamp },
+        linear: { x: 0.0, y: 0.0, z: 0.0 },
         angular: { x: 0.0, y: 0.0, z: 0.0 }
       }));
       cmdVel.current.publish(twist);
