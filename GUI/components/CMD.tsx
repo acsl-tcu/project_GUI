@@ -36,7 +36,7 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
     const padRect = pad.getBoundingClientRect();
 
     function throttle<T extends MouseEvent | TouchEvent>(
-      callback: (event: T, now: number) => void,
+      callback: (event: T) => void,
       limit: number
     ): (event: T) => void {
       let lastTime = 0;
@@ -44,7 +44,7 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
         const now = Date.now();
         if (now - lastTime >= limit) {
           lastTime = now;
-          callback(event, now);
+          callback(event);
         }
       };
     }
@@ -55,7 +55,7 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
     // console.log('要素の左端からの距離:', rect.left); // x
     // console.log('要素の下端からの距離:', rect.bottom);
     // console.log('要素の右端からの距離:', rect.right);
-    const moveHandle = (e: MouseEvent | TouchEvent, timestamp: number) => {
+    const moveHandle = (e: MouseEvent | TouchEvent) => {
       let ex: number;
       let ey: number;
       if (e instanceof MouseEvent) {
@@ -91,7 +91,7 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
       cmdVel.current.publish(twist);
     };
 
-    const stopHandle = (e: MouseEvent | TouchEvent, timestamp: number) => {
+    const stopHandle = () => {
       handle.style.left = '100px';
       handle.style.top = '100px';
       setTwist(new ROSLIB.Message({
@@ -108,17 +108,17 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
 
 
     // 10Hz = 100ms間隔で実行されるよう制限
-    const throttledMoveHandle = throttle((e: MouseEvent | TouchEvent, now: number) => {
+    const throttledMoveHandle = throttle((e: MouseEvent | TouchEvent) => {
       if (
         pad &&
         e.target instanceof Node &&
         pad.contains(e.target)
       ) {
-        return moveHandle(e, now);
+        return moveHandle(e);
       } else {
-        return stopHandle(e, now);
+        return stopHandle();
       }
-    }, 1000);
+    }, 100);
     const throttledStopHandle = throttle(stopHandle, 100);
 
     const addListeners = () => {
@@ -135,15 +135,15 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
       document.removeEventListener('touchend', throttledStopHandle);
     };
 
-    const handleMouseDown = addListeners;
-    const handleTouchStart = addListeners;
+    // const handleMouseDown = addListeners;
+    // const handleTouchStart = addListeners;
 
-    handle.addEventListener('mousedown', handleMouseDown);
-    handle.addEventListener('touchstart', handleTouchStart);
+    handle.addEventListener('mousedown', addListeners);
+    handle.addEventListener('touchstart', addListeners);
 
     return () => {
-      handle.removeEventListener('mousedown', handleMouseDown);
-      handle.removeEventListener('touchstart', handleTouchStart);
+      handle.removeEventListener('mousedown', addListeners);
+      handle.removeEventListener('touchstart', addListeners);
       removeListeners();
     };
   }, [ros, twist]);
