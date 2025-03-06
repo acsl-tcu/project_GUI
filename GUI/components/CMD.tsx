@@ -3,15 +3,24 @@ import ROSLIB from 'roslib';
 
 interface RosCmdProps {
   ros: ROSLIB.Ros | null;
+  rid: number;
 }
-
-function throttle<T extends (...args: any[]) => void>(callback: T, limit: number): (...args: Parameters<T>) => void {
+// function throttle<T extends (event: Event, now: number) => void>(
+//   callback: T,
+//   limit: number
+// ): (event: Event) => void {
+function throttle<T extends MouseEvent | TouchEvent>(
+  callback: (event: T, now: number) => void,
+  limit: number
+): (event: T) => void {
+  //function throttle<T extends (...args: any[]) => void>(callback: T, limit: number): (...args: Parameters<T>) => void {
   let lastTime = 0;
-  return (...args: Parameters<T>): void => {
+  //(...args: Parameters<T>): void => {
+  return (event: T): void => {
     const now = Date.now();
     if (now - lastTime >= limit) {
       lastTime = now;
-      callback(...args, now);
+      callback(event, now);
     }
   };
 }
@@ -87,9 +96,9 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
       cmdVel.current.publish(twist);
     };
 
-    const stopHandle = (timestamp: number) => {
-      document.removeEventListener('mousemove', moveHandle);
-      document.removeEventListener('mouseup', stopHandle);
+    const stopHandle = (e: MouseEvent | TouchEvent, timestamp: number) => {
+      // document.removeEventListener('mousemove', moveHandle);
+      // document.removeEventListener('mouseup', stopHandle);
       handle.style.left = '100px';
       handle.style.top = '100px';
       setTwist(new ROSLIB.Message({
@@ -102,42 +111,55 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
       Topic.current.publish(msg);
     };
     // 10Hz = 100ms間隔で実行されるよう制限
-    const throttledMoveHandle = throttle((e: MouseEvent | TouchEvent) => {
+    const throttledMoveHandle = throttle((e: MouseEvent | TouchEvent, now: number) => {
       if (
         pad &&
         e.target instanceof Node &&
         pad.contains(e.target)
       ) {
-        return moveHandle;
+        return moveHandle(e, now);
       } else {
-        return stopHandle;
+        return stopHandle(e, now);
       }
-
     }, 100);
     const throttledStopHandle = throttle(stopHandle, 100);
 
-    handle.addEventListener('mousedown', (e: MouseEvent) => {
-      e.preventDefault();
+
+
+    // handle.addEventListener('mousedown', (e: MouseEvent) => {
+    //   e.preventDefault();
+    //   document.addEventListener('mousemove', throttledMoveHandle);
+    //   document.addEventListener('mouseup', throttledStopHandle);
+    // });
+    // handle.addEventListener('touchstart', (e: TouchEvent) => {
+    //   e.preventDefault();
+    //   document.addEventListener('touchmove', throttledMoveHandle);
+    //   document.addEventListener('touchend', throttledStopHandle);
+    // });
+
+    const handleMouseDown = () => {
       document.addEventListener('mousemove', throttledMoveHandle);
       document.addEventListener('mouseup', throttledStopHandle);
-    });
-    handle.addEventListener('touchstart', (e: MouseEvent) => {
-      e.preventDefault();
+    };
+
+    const handleTouchStart = () => {
       document.addEventListener('touchmove', throttledMoveHandle);
       document.addEventListener('touchend', throttledStopHandle);
-    });
+    };
+
+    handle.addEventListener('mousedown', handleMouseDown);
+    handle.addEventListener('touchstart', handleTouchStart);
 
     return () => {
-      handle.removeEventListener('mousedown', (e: MouseEvent) => {
-        document.removeEventListener('mousemove', moveHandle);
-        document.removeEventListener('mouseup', stopHandle);
-      });
-      handle.removeEventListener('touchstart', (e: MouseEvent) => {
-        document.removeEventListener('touchmove', moveHandle);
-        document.removeEventListener('touchend', stopHandle);
-      });
+      handle.removeEventListener('mousedown', handleMouseDown);
+      handle.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('mousemove', throttledMoveHandle);
+      document.removeEventListener('mouseup', throttledStopHandle);
+      document.removeEventListener('touchmove', throttledMoveHandle);
+      document.removeEventListener('touchend', throttledStopHandle);
     };
   }, [ros, twist]);
+  //  }, [ros, twist]);
 
   return (
     <div>
