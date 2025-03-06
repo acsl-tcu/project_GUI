@@ -35,19 +35,19 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
 
     const padRect = pad.getBoundingClientRect();
 
-    function throttle<T extends MouseEvent | TouchEvent>(
-      callback: (event: T) => void,
-      limit: number
-    ): (event: T) => void {
-      let lastTime = 0;
-      return (event: T): void => {
-        const now = Date.now();
-        if (now - lastTime >= limit) {
-          lastTime = now;
-          callback(event);
-        }
-      };
-    }
+    // function throttle<T extends MouseEvent | TouchEvent>(
+    //   callback: (event: T) => void,
+    //   limit: number
+    // ): (event: T) => void {
+    //   let lastTime = 0;
+    //   return (event: T): void => {
+    //     const now = Date.now();
+    //     if (now - lastTime >= limit) {
+    //       lastTime = now;
+    //       callback(event);
+    //     }
+    //   };
+    // }
     // const rect = pad.getBoundingClientRect();
     // console.log('要素の幅:', rect.width);
     // console.log('要素の高さ:', rect.height);
@@ -149,12 +149,22 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
     // const handleMouseDown = addListeners;
     // const handleTouchStart = addListeners;
 
-    handle.addEventListener('mousedown', addListeners);
-    handle.addEventListener('touchstart', addListeners);
+    handle.addEventListener('mousedown', (e: MouseEvent) => {
+      e.preventDefault();
+      addListeners();
+    });
+    handle.addEventListener('touchstart', (e: TouchEvent) => {
+      e.preventDefault();
+      addListeners();
+    });
 
     return () => {
-      handle.removeEventListener('mousedown', addListeners);
-      handle.removeEventListener('touchstart', addListeners);
+      handle.removeEventListener('mousedown', (e: MouseEvent) => {
+        addListeners();
+      });
+      handle.removeEventListener('touchstart', (e: TouchEvent) => {
+        addListeners();
+      });
       removeListeners();
     };
   }, [ros, twist, cmdVel, Topic, handleRef, padRef]);
