@@ -102,8 +102,8 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
       Topic.current.publish(msg);
     };
     // 10Hz = 100ms間隔で実行されるよう制限
-    const throttledMoveHandler = throttle(moveHandler, 100);
-    const throttledStopHandler = throttle(stopHandler, 100);
+    const throttledMoveHandle = throttle(moveHandle, 100);
+    const throttledStopHandle = throttle(stopHandle, 100);
 
     handle.addEventListener('mousedown', (e: MouseEvent) => {
       e.preventDefault();
