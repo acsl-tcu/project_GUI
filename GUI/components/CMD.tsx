@@ -5,9 +5,9 @@ interface RosCmdProps {
   ros: ROSLIB.Ros | null;
 }
 
-function throttle(callback, limit) {
+function throttle<T extends (...args: any[]) => void>(callback: T, limit: number): (...args: Parameters<T>) => void {
   let lastTime = 0;
-  return function (...args) {
+  return (...args: Parameters<T>): void => {
     const now = Date.now();
     if (now - lastTime >= limit) {
       lastTime = now;
@@ -102,8 +102,8 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
       Topic.current.publish(msg);
     };
     // 10Hz = 100ms間隔で実行されるよう制限
-    const throttledMoveHandle = throttle(moveHandle, 100);
-    const throttledStopHandle = throttle(stopHandle, 100);
+    const throttledMoveHandle = throttle(moveHandle, 1000);
+    const throttledStopHandle = throttle(stopHandle, 1000);
 
     handle.addEventListener('mousedown', (e: MouseEvent) => {
       e.preventDefault();
