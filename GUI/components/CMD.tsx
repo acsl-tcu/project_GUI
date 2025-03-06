@@ -101,40 +101,51 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
       cmdVel.current.publish(twist);
       removeListeners();
 
-
       const msg = new ROSLIB.Message({ layout: { dim: [{ label: "length", size: 2, stride: 2 }], data_offset: 0 }, data: [0, 0] });
       Topic.current.publish(msg);
     };
 
 
     // 10Hz = 100ms間隔で実行されるよう制限
-    const throttledMoveHandle = throttle((e: MouseEvent | TouchEvent) => {
-      if (
-        pad &&
-        e.target instanceof Node &&
-        pad.contains(e.target)
-      ) {
-        return moveHandle(e);
-      } else {
-        return stopHandle();
-      }
-    }, 100);
-    const throttledStopHandle = throttle(stopHandle, 100);
+    // const throttledMoveHandle = throttle((e: MouseEvent | TouchEvent) => {
+    //   if (
+    //     pad &&
+    //     e.target instanceof Node &&
+    //     pad.contains(e.target)
+    //   ) {
+    //     return moveHandle(e);
+    //   } else {
+    //     return stopHandle();
+    //   }
+    // }, 100);
+    // const throttledStopHandle = throttle(stopHandle, 100);
 
     const addListeners = () => {
-      document.addEventListener('mousemove', throttledMoveHandle);
-      document.addEventListener('mouseup', throttledStopHandle);
-      document.addEventListener('touchmove', throttledMoveHandle);
-      document.addEventListener('touchend', throttledStopHandle);
+      document.addEventListener('mousemove', moveHandle);
+      document.addEventListener('mouseup', stopHandle);
+      document.addEventListener('touchmove', moveHandle);
+      document.addEventListener('touchend', stopHandle);
     };
 
     const removeListeners = () => {
-      document.removeEventListener('mousemove', throttledMoveHandle);
-      document.removeEventListener('mouseup', throttledStopHandle);
-      document.removeEventListener('touchmove', throttledMoveHandle);
-      document.removeEventListener('touchend', throttledStopHandle);
+      document.removeEventListener('mousemove', moveHandle);
+      document.removeEventListener('mouseup', stopHandle);
+      document.removeEventListener('touchmove', moveHandle);
+      document.removeEventListener('touchend', stopHandle);
     };
+    // const addListeners = () => {
+    //   document.addEventListener('mousemove', throttledMoveHandle);
+    //   document.addEventListener('mouseup', throttledStopHandle);
+    //   document.addEventListener('touchmove', throttledMoveHandle);
+    //   document.addEventListener('touchend', throttledStopHandle);
+    // };
 
+    // const removeListeners = () => {
+    //   document.removeEventListener('mousemove', throttledMoveHandle);
+    //   document.removeEventListener('mouseup', throttledStopHandle);
+    //   document.removeEventListener('touchmove', throttledMoveHandle);
+    //   document.removeEventListener('touchend', throttledStopHandle);
+    // };
     // const handleMouseDown = addListeners;
     // const handleTouchStart = addListeners;
 
