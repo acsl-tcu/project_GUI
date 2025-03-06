@@ -5,6 +5,17 @@ interface RosCmdProps {
   ros: ROSLIB.Ros | null;
 }
 
+function throttle(callback, limit) {
+  let lastTime = 0;
+  return function (...args) {
+    const now = Date.now();
+    if (now - lastTime >= limit) {
+      lastTime = now;
+      callback(...args);
+    }
+  };
+}
+
 const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
   const padRef = useRef<HTMLDivElement>(null);
   const handleRef = useRef<HTMLDivElement>(null);
@@ -67,8 +78,8 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
       handle.style.left = `${x}px`;
       handle.style.top = `${y}px`;
 
-      const nx = ((x - cx) / r);
-      const ny = ((cy - y) / r);
+      const nx = Math.max(-0.3, Math.min(0.3, ((x - cx) / r)));
+      const ny = Math.min(0.5, ((cy - y) / r));
       setTwist(new ROSLIB.Message({
         linear: { x: parseFloat(ny.toFixed(3)), y: 0.0, z: 0.0 },
         angular: { x: 0.0, y: 0.0, z: -parseFloat(nx.toFixed(3)) }
@@ -90,22 +101,29 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
       const msg = new ROSLIB.Message({ layout: { dim: [{ label: "length", size: 2, stride: 2 }], data_offset: 0 }, data: [0, 0] });
       Topic.current.publish(msg);
     };
+    // 10Hz = 100ms間隔で実行されるよう制限
+    const throttledMoveHandler = throttle(moveHandler, 100);
+    const throttledStopHandler = throttle(stopHandler, 100);
 
     handle.addEventListener('mousedown', (e: MouseEvent) => {
       e.preventDefault();
-      document.addEventListener('mousemove', moveHandle);
-      document.addEventListener('mouseup', stopHandle);
+      document.addEventListener('mousemove', throttledMoveHandle);
+      document.addEventListener('mouseup', throttledStopHandle);
     });
     handle.addEventListener('touchstart', (e: MouseEvent) => {
       e.preventDefault();
-      document.addEventListener('touchmove', moveHandle);
-      document.addEventListener('touchend', stopHandle);
+      document.addEventListener('touchmove', throttledMoveHandle);
+      document.addEventListener('touchend', throttledStopHandle);
     });
 
     return () => {
       handle.removeEventListener('mousedown', (e: MouseEvent) => {
         document.removeEventListener('mousemove', moveHandle);
         document.removeEventListener('mouseup', stopHandle);
+      });
+      handle.removeEventListener('touchstart', (e: MouseEvent) => {
+        document.removeEventListener('touchmove', moveHandle);
+        document.removeEventListener('touchend', stopHandle);
       });
     };
   }, [ros, twist]);
