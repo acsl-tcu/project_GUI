@@ -110,6 +110,8 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
       const msg = new ROSLIB.Message({ layout: { dim: [{ label: "length", size: 2, stride: 2 }], data_offset: 0 }, data: [0, 0] });
       Topic.current.publish(msg);
     };
+
+
     // 10Hz = 100ms間隔で実行されるよう制限
     const throttledMoveHandle = throttle((e: MouseEvent | TouchEvent, now: number) => {
       if (
@@ -124,28 +126,22 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
     }, 100);
     const throttledStopHandle = throttle(stopHandle, 100);
 
-
-
-    // handle.addEventListener('mousedown', (e: MouseEvent) => {
-    //   e.preventDefault();
-    //   document.addEventListener('mousemove', throttledMoveHandle);
-    //   document.addEventListener('mouseup', throttledStopHandle);
-    // });
-    // handle.addEventListener('touchstart', (e: TouchEvent) => {
-    //   e.preventDefault();
-    //   document.addEventListener('touchmove', throttledMoveHandle);
-    //   document.addEventListener('touchend', throttledStopHandle);
-    // });
-
-    const handleMouseDown = () => {
-      document.addEventListener('mousemove', throttledMoveHandle);
-      document.addEventListener('mouseup', throttledStopHandle);
+    const addListeners = () => {
+      handle.addEventListener('mousemove', throttledMoveHandle);
+      handle.addEventListener('mouseup', throttledStopHandle);
+      handle.addEventListener('touchmove', throttledMoveHandle);
+      handle.addEventListener('touchend', throttledStopHandle);
     };
 
-    const handleTouchStart = () => {
-      document.addEventListener('touchmove', throttledMoveHandle);
-      document.addEventListener('touchend', throttledStopHandle);
+    const removeListeners = () => {
+      handle.removeEventListener('mousemove', throttledMoveHandle);
+      handle.removeEventListener('mouseup', throttledStopHandle);
+      handle.removeEventListener('touchmove', throttledMoveHandle);
+      handle.removeEventListener('touchend', throttledStopHandle);
     };
+
+    const handleMouseDown = addListeners;
+    const handleTouchStart = addListeners;
 
     handle.addEventListener('mousedown', handleMouseDown);
     handle.addEventListener('touchstart', handleTouchStart);
@@ -153,13 +149,9 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
     return () => {
       handle.removeEventListener('mousedown', handleMouseDown);
       handle.removeEventListener('touchstart', handleTouchStart);
-      document.removeEventListener('mousemove', throttledMoveHandle);
-      document.removeEventListener('mouseup', throttledStopHandle);
-      document.removeEventListener('touchmove', throttledMoveHandle);
-      document.removeEventListener('touchend', throttledStopHandle);
+      removeListeners();
     };
   }, [ros, twist]);
-  //  }, [ros, twist]);
 
   return (
     <div>
