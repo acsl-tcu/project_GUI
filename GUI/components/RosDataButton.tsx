@@ -18,7 +18,8 @@ const RosDataButton: React.FC<RosDataButtonProps> = ({ ros, data_key, rid, conte
   }));
 
   const handleClick = () => {
-    const tid = bld_data[String(data_key)][contents];
+    const tid = parseInt(data_key, 10) === 0 ? 0
+      : bld_data[String(data_key)][contents];
     const msg = new ROSLIB.Message({ layout: { dim: [{ label: "length", size: 2, stride: 2 }], data_offset: 0 }, data: [parseInt(data_key, 10), tid[0]] });
     console.log("click!! : " + JSON.stringify(msg, null, 2) + "======")
     Topic.current.publish(msg);
