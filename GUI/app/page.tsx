@@ -35,6 +35,7 @@ export default function Home() {
           {places.map((i) => {
             return (<RosDataButton key={"Robot" + rid + "-" + i} ros={ros} data_key={floor} rid={rid} contents={i} selected={room} setSelected={setRoom} />);
           })}
+          <RosDataButton key={"Robot" + rid + "-" + 0} ros={ros} data_key={0} rid={rid} contents={"Stop"} selected={room} setSelected={setRoom} />);
         </div>
         {/* <div key="GUI" className="grid grid-cols-2 gap-4 content-stretch">
           <div key="MoveVehicle" className="col-span-1">
