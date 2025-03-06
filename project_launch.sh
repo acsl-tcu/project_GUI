@@ -5,10 +5,10 @@ echo $PROJECT
 echo $ROS_DOMAIN_ID
 
 dup rosbridge
+dup chrome
 dup GUI
 
-echo "sleep 10 seconds"
-sleep 10
+#echo "sleep 10 seconds"
+#sleep 10
 #unclutter -idle 0.1 -root
-dup chrome
 echo "complete launch"
