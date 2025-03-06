@@ -146,7 +146,7 @@ const RosCmd: React.FC<RosCmdProps> = ({ ros, rid }) => {
       handle.removeEventListener('touchstart', addListeners);
       removeListeners();
     };
-  }, [ros, twist]);
+  }, [ros, twist, cmdVel, Topic, handleRef, padRef]);
 
   return (
     <div>
