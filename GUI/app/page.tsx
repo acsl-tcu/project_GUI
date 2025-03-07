@@ -37,7 +37,7 @@ export default function Home() {
           })}
           <RosDataButton key={"Robot" + rid + "-" + 0} ros={ros} data_key={0} rid={rid} contents={"Stop"} selected={room} setSelected={setRoom} />);
         </div>
-        {/* <div key="GUI" className="grid grid-cols-2 gap-4 content-stretch">
+        <div key="GUI" className="grid grid-cols-2 gap-4 content-stretch">
           <div key="MoveVehicle" className="col-span-1">
             <h1 className="flex justify-center">ROS Control Panel</h1>
             <div className="flex justify-center items-center">
@@ -50,7 +50,7 @@ export default function Home() {
               <CameraData ros={ros} />
             </div>
           </div>
-        </div > */}
+        </div >
       </>
       }
     </main >
