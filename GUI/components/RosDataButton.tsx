@@ -13,7 +13,7 @@ interface RosDataButtonProps {
 const RosDataButton: React.FC<RosDataButtonProps> = ({ ros, data_key, rid, contents, selected, setSelected }) => {
   const Topic = useRef(new ROSLIB.Topic({
     ros: ros,
-    name: '/Robot' + rid + '/console2robot',
+    name: '/Robot' + rid + '/console2converter',
     messageType: 'std_msgs/msg/Int8MultiArray'
   }));
 
