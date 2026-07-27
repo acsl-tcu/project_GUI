@@ -1,0 +1,24 @@
+# GUI Web サーバ計算機用 systemd user unit (テンプレート)
+#
+# 導入手順 (GUI サーバ上):
+#   cd <project_GUI>/GUI && npm ci && npm run build
+#   sed -e "s|@GUI_DIR@|$(pwd)|" ../deploy/gui_web.service \
+#     > ~/.config/systemd/user/gui_web.service
+#   systemctl --user daemon-reload
+#   systemctl --user enable --now gui_web.service
+#   loginctl enable-linger "$USER"
+
+[Unit]
+Description=ACSL GUI web server (Next.js)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=@GUI_DIR@
+ExecStart=/usr/bin/env bash -lc 'exec npm run start -- -p 3000'
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target
