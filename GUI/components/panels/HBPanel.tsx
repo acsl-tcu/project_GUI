@@ -62,7 +62,7 @@ const HBPanel: React.FC<HBPanelProps> = ({ ros, settings }) => {
   }[fresh];
 
   const Card = ({ title, value }: { title: string; value?: string }) => (
-    <div className="rounded-lg border border-slate-700 bg-slate-900 p-3">
+    <div className="rounded-xl border border-slate-700/70 bg-slate-900/70 p-3 shadow-md shadow-black/20">
       <div className="text-xs text-slate-400">{title}</div>
       <div className="font-mono text-sm mt-1 break-all">{value ?? "--"}</div>
     </div>
@@ -112,7 +112,7 @@ const HBPanel: React.FC<HBPanelProps> = ({ ros, settings }) => {
         } />
       </div>
 
-      <section className="rounded-lg border border-slate-700 bg-slate-900 p-3">
+      <section className="rounded-xl border border-slate-700/70 bg-slate-900/70 p-3 shadow-md shadow-black/20">
         <h2 className="text-sm text-slate-400 mb-2">
           生ログ (直近 {HISTORY_MAX} 件)
         </h2>

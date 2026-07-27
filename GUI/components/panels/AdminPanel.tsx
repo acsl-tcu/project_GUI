@@ -145,7 +145,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ settings }) => {
     <div className="grid gap-4 lg:grid-cols-2">
       <div className="space-y-4">
         {/* システム状態 */}
-        <section className="rounded-lg border border-slate-700 bg-slate-900 p-3">
+        <section className="rounded-xl border border-slate-700/70 bg-slate-900/70 p-3 shadow-md shadow-black/20">
           <h2 className="text-sm text-slate-400 mb-2">実験機 PC システム状態</h2>
           {health ? (
             <div className="text-sm font-mono space-y-1">
@@ -175,7 +175,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ settings }) => {
         </section>
 
         {/* コンテナ一覧 */}
-        <section className="rounded-lg border border-slate-700 bg-slate-900 p-3">
+        <section className="rounded-xl border border-slate-700/70 bg-slate-900/70 p-3 shadow-md shadow-black/20">
           <div className="flex items-center mb-2">
             <h2 className="text-sm text-slate-400">コンテナ</h2>
             <label className="ml-auto flex items-center gap-1 text-xs text-slate-400">
@@ -303,7 +303,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ settings }) => {
 
         {/* ログ表示 */}
         {logsFor && (
-          <section className="rounded-lg border border-slate-700 bg-slate-900 p-3">
+          <section className="rounded-xl border border-slate-700/70 bg-slate-900/70 p-3 shadow-md shadow-black/20">
             <div className="flex items-center mb-2">
               <h2 className="text-sm text-slate-400">logs: {logsFor}</h2>
               <button
@@ -321,7 +321,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ settings }) => {
       </div>
 
       {/* パラメータ (YAML) */}
-      <section className="rounded-lg border border-slate-700 bg-slate-900 p-3">
+      <section className="rounded-xl border border-slate-700/70 bg-slate-900/70 p-3 shadow-md shadow-black/20">
         <h2 className="text-sm text-slate-400 mb-2">
           パラメータチューニング (config/*.yaml)
         </h2>

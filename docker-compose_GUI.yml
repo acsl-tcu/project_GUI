@@ -1,5 +1,0 @@
-services:
-  common:
-    working_dir: /root/GUI
-    volumes:
-      - ../../GUI:/root/GUI # .acsl/4_dockerからのパス

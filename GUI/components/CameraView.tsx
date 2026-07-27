@@ -30,7 +30,7 @@ const CameraView: React.FC<CameraViewProps> = ({
   );
 
   return (
-    <div className="rounded-lg border border-slate-700 bg-slate-900 p-2">
+    <div className="rounded-xl border border-slate-700/70 bg-slate-900/70 p-2 shadow-md shadow-black/20">
       <div className="text-xs text-slate-400 mb-1">camera: {topic}</div>
       {src ? (
         // eslint-disable-next-line @next/next/no-img-element

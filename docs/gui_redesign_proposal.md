@@ -84,8 +84,8 @@ flowchart LR
 
 | 機材 | 役割 | 置くもの |
 |---|---|---|
-| **実験機 PC** (ローバー搭載) | data plane + 機体側管理 | 機体コンテナ群 (既存) + **rosbridge コンテナ** + **management agent (ホスト常駐)** |
-| **GUI Web サーバ計算機** | GUI 配信 | Next.js 本番サーバ (`next build` + `next start`)。将来: 複数機体の HB 集約・記録、地図/資産配信 |
+| **実験機 PC** (ローバー搭載) | data plane + 機体側管理 | 機体コンテナ群 (既存・**無変更**) + project_GUI 並置デプロイ (**rosbridge コンテナ** + **management agent**) |
+| **GUI Web サーバ計算機 (RPi5 想定)** | GUI 配信 + **フロア地図配信** | Next.js 本番サーバ (`next build` + `next start`) + environment リポジトリの occupancy を `GUI_MAP_DIR` で配信 (フロア切替時の /map 無線転送スパイクを回避)。将来: 複数機体の HB 集約・記録 |
 | **ブリッジ専用機** | **不要** | ブリッジ (rosbridge + agent) は実験機 PC に同居させる。台数が増えたら GUI サーバに fleet gateway を置く方式に拡張 |
 | iPad | 操作端末 | ブラウザのみ (インストール不要) |
 

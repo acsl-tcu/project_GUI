@@ -1,0 +1,27 @@
+# GUI/キオスク用イメージ: rosbridge + Node.js (Next.js) + Chromium
+# ビルド: dup GUI / dup chrome の自動ビルド、または
+#   docker build -f dockerfiles/dockerfile.GUI -t kasekiguchi/acsl-common:GUI${x86} .
+# multi-arch push 例:
+#   docker buildx build -f ./dockerfiles/dockerfile.GUI --platform linux/amd64,linux/arm64 \
+#     --tag kasekiguchi/acsl-common:image_GUI --push .
+FROM ros:jazzy-ros-core-noble
+SHELL [ "/bin/bash", "-c" ]
+
+RUN apt-get update && apt-get install --no-install-recommends -y \
+  build-essential \
+  software-properties-common \
+  ssh \
+  git \
+  nodejs \
+  npm \
+  python3-colcon-common-extensions \
+  python3-rosdep \
+  ros-jazzy-rosbridge-suite \
+  dumb-init \
+  && rm -rf /var/lib/apt/lists/*
+
+# キオスク用 Chromium (Ubuntu noble は snap 版を避けて xtradeb PPA を使う)
+RUN add-apt-repository ppa:xtradeb/apps -y \
+  && apt-get update \
+  && apt-get install -y chromium unclutter \
+  && rm -rf /var/lib/apt/lists/*

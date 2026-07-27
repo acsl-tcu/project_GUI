@@ -16,6 +16,9 @@ Wants=network-online.target
 [Service]
 Type=simple
 WorkingDirectory=@GUI_DIR@
+# フロア地図のローカル配信 (無線の /map 転送スパイク回避)。
+# environment リポジトリの occupancy ディレクトリを指す。
+Environment=GUI_MAP_DIR=@GUI_MAP_DIR@
 ExecStart=/usr/bin/env bash -lc 'exec npm run start -- -p 3000'
 Restart=always
 RestartSec=10

@@ -64,31 +64,38 @@ export default function Home() {
     saveSettings(s);
   };
 
-  const rosBadge = {
-    connected: ["rosbridge OK", "bg-emerald-600"],
-    connecting: ["rosbridge 接続中", "bg-amber-500"],
-    closed: ["rosbridge 切断", "bg-red-600"],
-    error: ["rosbridge エラー", "bg-red-600"],
+  const rosTone: Tone =
+    status === "connected" ? "ok" : status === "connecting" ? "warn" : "bad";
+  const rosLabel = {
+    connected: "rosbridge",
+    connecting: "rosbridge 接続中",
+    closed: "rosbridge 切断",
+    error: "rosbridge エラー",
   }[status];
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
-      <header className="sticky top-0 z-10 border-b border-slate-800 bg-slate-950/95 backdrop-blur px-3 py-2">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-bold text-lg mr-2">
-            ACSL Rover GUI{" "}
-            <span className="text-xs text-slate-500 font-normal">
-              Robot{settings.rid} @ {settings.roverHost}
+    <main className="min-h-screen text-slate-100">
+      <header className="sticky top-0 z-10 border-b border-slate-800/80 bg-slate-950/85 backdrop-blur px-3 py-2 shadow-lg shadow-black/40">
+        <div className="flex items-center gap-3 flex-wrap">
+          <span className="flex items-center gap-2 mr-1">
+            <span className="grid place-items-center w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-sky-600 font-black text-white shadow">
+              R
+            </span>
+            <span className="leading-tight">
+              <span className="block font-bold">ACSL Rover GUI</span>
+              <span className="block text-[10px] text-slate-500 font-mono">
+                Robot{settings.rid} @ {settings.roverHost}
+              </span>
             </span>
           </span>
-          <nav className="flex gap-1">
+          <nav className="flex gap-0.5 rounded-lg bg-slate-900/90 border border-slate-700/70 p-0.5">
             {TABS.map((t) => (
               <button
                 key={t.id}
-                className={`px-4 py-1.5 rounded-t text-sm font-semibold ${
+                className={`px-4 py-1.5 rounded-md text-sm font-semibold transition-colors ${
                   tab === t.id
-                    ? "bg-slate-800 text-white border-b-2 border-emerald-500"
-                    : "text-slate-400 hover:text-white"
+                    ? "bg-emerald-600 text-white shadow"
+                    : "text-slate-400 hover:text-slate-100 hover:bg-slate-800"
                 }`}
                 onClick={() => setTab(t.id)}
               >
@@ -97,26 +104,18 @@ export default function Home() {
             ))}
           </nav>
           <div className="ml-auto flex items-center gap-2 text-xs">
-            <button
-              className={`px-2 py-1 rounded text-white ${rosBadge[1]}`}
+            <StatusPill
+              tone={rosTone}
+              label={rosLabel}
               onClick={reconnect}
               title="クリックで再接続"
-            >
-              {rosBadge[0]}
-            </button>
-            <span
-              className={`px-2 py-1 rounded text-white ${
-                agentOk == null
-                  ? "bg-slate-700"
-                  : agentOk
-                    ? "bg-emerald-600"
-                    : "bg-red-600"
-              }`}
-            >
-              agent {agentOk == null ? "--" : agentOk ? "OK" : "NG"}
-            </span>
+            />
+            <StatusPill
+              tone={agentOk == null ? "off" : agentOk ? "ok" : "bad"}
+              label={agentOk == null ? "agent --" : agentOk ? "agent" : "agent NG"}
+            />
             <button
-              className="px-2 py-1 rounded border border-slate-600 text-slate-300 hover:bg-slate-800"
+              className="px-2.5 py-1 rounded-full border border-slate-600 text-slate-300 hover:bg-slate-800"
               onClick={() => setShowSettings((v) => !v)}
             >
               ⚙ 接続設定
@@ -155,6 +154,45 @@ export default function Home() {
         </div>
       </div>
     </main>
+  );
+}
+
+type Tone = "ok" | "warn" | "bad" | "off";
+
+function StatusPill({
+  tone,
+  label,
+  onClick,
+  title,
+}: {
+  tone: Tone;
+  label: string;
+  onClick?: () => void;
+  title?: string;
+}) {
+  const cls = {
+    ok: "border-emerald-500/60 bg-emerald-500/10 text-emerald-300",
+    warn: "border-amber-500/60 bg-amber-500/10 text-amber-300",
+    bad: "border-red-500/60 bg-red-500/10 text-red-300",
+    off: "border-slate-600 bg-slate-800/60 text-slate-400",
+  }[tone];
+  const dot = {
+    ok: "bg-emerald-400",
+    warn: "bg-amber-400",
+    bad: "bg-red-400",
+    off: "bg-slate-500",
+  }[tone];
+  return (
+    <button
+      className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-semibold ${cls} ${
+        onClick ? "" : "cursor-default"
+      }`}
+      onClick={onClick}
+      title={title}
+    >
+      <span className={`live-dot ${dot}`} />
+      {label}
+    </button>
   );
 }
 

@@ -118,7 +118,7 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
     <div className="grid gap-4 lg:grid-cols-2">
       <div className="space-y-4">
         {/* フロア選択 */}
-        <section className="rounded-lg border border-slate-700 bg-slate-900 p-3">
+        <section className="rounded-xl border border-slate-700/70 bg-slate-900/70 p-3 shadow-md shadow-black/20">
           <h2 className="text-sm text-slate-400 mb-2">目標位置 (standby 設定 → start で発進)</h2>
           <div className="flex gap-1 mb-3">
             {FLOOR_NUMS.map((f) => (
@@ -150,7 +150,7 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
         </section>
 
         {/* 初期推定値 */}
-        <section className="rounded-lg border border-slate-700 bg-slate-900 p-3">
+        <section className="rounded-xl border border-slate-700/70 bg-slate-900/70 p-3 shadow-md shadow-black/20">
           <h2 className="text-sm text-slate-400 mb-2">
             初期推定値 (入力すると target 送信時に付加され AMCL 再シードされる)
           </h2>
@@ -190,7 +190,7 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
         </section>
 
         {/* 実行制御 */}
-        <section className="rounded-lg border border-slate-700 bg-slate-900 p-3">
+        <section className="rounded-xl border border-slate-700/70 bg-slate-900/70 p-3 shadow-md shadow-black/20">
           <h2 className="text-sm text-slate-400 mb-2">実行制御</h2>
           <div className="flex flex-wrap gap-2">
             <button
@@ -261,7 +261,7 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
 
       <div className="space-y-4">
         {/* コマンドログ */}
-        <section className="rounded-lg border border-slate-700 bg-slate-900 p-3">
+        <section className="rounded-xl border border-slate-700/70 bg-slate-900/70 p-3 shadow-md shadow-black/20">
           <h2 className="text-sm text-slate-400 mb-2">コマンドログ</h2>
           <div className="h-64 overflow-y-auto font-mono text-xs space-y-1 bg-slate-950 rounded p-2">
             {log.length === 0 && (
@@ -286,7 +286,7 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
         </section>
 
         {/* teleop */}
-        <section className="rounded-lg border border-slate-700 bg-slate-900 p-3">
+        <section className="rounded-xl border border-slate-700/70 bg-slate-900/70 p-3 shadow-md shadow-black/20">
           <h2 className="text-sm text-slate-400 mb-2">
             手動操作 (/rover_twist 直接 publish)
           </h2>

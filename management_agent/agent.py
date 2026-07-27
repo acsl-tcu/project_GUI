@@ -20,6 +20,9 @@ ROS / Docker SDK に依存しない Python 標準ライブラリのみの単一�
   AGENT_PORT    : listen ポート (default 7780)
   AGENT_TOKEN   : 設定すると X-Agent-Token ヘッダ必須
   CONSOLE_HOST / CONSOLE_PORT : TCP コンソール接続先 (default 127.0.0.1 / 自動検出)
+  AGENT_START_BRIDGE : "1" で起動時に rosbridge コンテナを dup rosbridge で上げる
+  GUI_WORK_DIR  : rosbridge を上げる project_GUI デプロイ先
+                  (default: この agent.py が置かれた checkout 自身)
 """
 
 import json
@@ -28,6 +31,7 @@ import re
 import socket
 import subprocess
 import sys
+import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
@@ -326,7 +330,33 @@ class Handler(BaseHTTPRequestHandler):
         self._json(404, {"ok": False, "output": "unknown endpoint"})
 
 
+def start_bridge_async():
+    """AGENT_START_BRIDGE=1 のとき、GUI プロジェクト側の rosbridge コンテナを上げる。
+    実験機 PC で agent の systemd unit 1 本から bridge も起動するための仕組み
+    (実験機プロジェクトの project_launch.service には手を入れない)。"""
+    gui_dir = os.environ.get("GUI_WORK_DIR") or str(Path(__file__).resolve().parent.parent)
+    if not (Path(gui_dir) / ".acsl" / "bashrc").is_file():
+        print(f"[agent] rosbridge 起動スキップ: {gui_dir}/.acsl/bashrc がありません",
+              file=sys.stderr)
+        return
+
+    def _run():
+        cmd = f"source '{gui_dir}/.acsl/bashrc' >/dev/null 2>&1; cd '{gui_dir}'; dup rosbridge"
+        env = dict(os.environ, DUP_SKIP_RID_CHECK="1")
+        try:
+            p = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True,
+                               timeout=600, env=env, stdin=subprocess.DEVNULL)
+            tail = (p.stdout + p.stderr).strip()[-1000:]
+            print(f"[agent] dup rosbridge rc={p.returncode}\n{tail}", file=sys.stderr)
+        except Exception as e:  # noqa: BLE001
+            print(f"[agent] dup rosbridge failed: {e}", file=sys.stderr)
+
+    threading.Thread(target=_run, daemon=True).start()
+
+
 def main():
+    if os.environ.get("AGENT_START_BRIDGE") == "1":
+        start_bridge_async()
     if not WORK_DIR:
         print("[agent] WARNING: ACSL_WORK_DIR 未設定 — config/dup 系 API は使えません",
               file=sys.stderr)

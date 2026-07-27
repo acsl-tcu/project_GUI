@@ -53,14 +53,27 @@ npm run dev                     # 本番: npm run build && npm run start
 # → http://<GUIサーバ>:3000 を iPad で開き、⚙接続設定に実験機 PC の IP を入力
 ```
 
+## 2 回目の更新で入ったもの
+
+- **現 infra レイアウトへ全面移行**: `1_launcher/`→`launcher/`, `2_ros_packages/`→`packages/`,
+  `3_dockerfiles/`→`dockerfiles/` (compose override も `dockerfiles/` 配下へ)。
+- **dockerfile 再構築**: `dockerfile.GUI` (rosbridge+Node+Chromium) と
+  軽量な `dockerfile.rosbridge` (実験機 PC 並置用、`dup rosbridge` で自動ビルド)。
+  rf_rover 側は無変更。
+- **project_launch.sh をモード化**: `dup all bridge` (rosbridge のみ) / `web` / `kiosk` (既定)。
+- **agent の rosbridge 自動起動**: unit の `AGENT_START_BRIDGE=1` で起動時に `dup rosbridge`。
+  実験機 PC の追加 systemd は agent 1 本で済む (既存 project_launch.service と競合しない)。
+- **フロア地図のローカル配信**: GUI サーバの `GUI_MAP_DIR` に environment の occupancy を
+  指すと `/api/floormap/<floor>` (+`/image`) が map_server 形式 yaml+PGM/PNG を配信。
+  Viz はこれを優先し **/map トピックは購読しない** (無線のフロア切替スパイク解消)。
+  無ければ従来どおり /map にフォールバック。
+- 見た目の刷新: ダークテーマ固定 + セグメントタブ + 生存ドット付きステータスピル。
+- 試行手順: `docs/setup_guide.md`。
+
 ## 既知の制約 / TODO (Phase 1 以降)
 
-- `/map` は生 JSON で受けるので大きい地図は初回転送が重い (cbor/png 圧縮は未対応)。
 - `/scan` 描画は TF を引かず推定姿勢基準の近似 (LiDAR 取付オフセット未考慮)。
-- rosbridge コンテナ: `3_dockerfiles/dockerfile.GUI` の `rosbridge-suite` が
-  コメントアウトされたまま (`image_GUI` タグ前提)。rf_rover 側で上げる場合は
-  rover イメージに `ros-jazzy-rosbridge-suite` を足して `launcher/launch_rosbridge.sh`
-  を追加するのが素直。
-- 旧レイアウト (`1_launcher/` 等) → 現 infra レイアウト (`launcher/` 等) への移行は未着手。
+- ローカル地図はファイル命名規約 `*_<N>F(_slice).yaml` 依存 (bld10 準拠)。他環境は要確認。
+- キオスクの `launch_GUI.sh` は `npm run dev` のまま (現地キオスク用途なら build+start 化したい)。
 - YAML エディタは構文チェックなし (保存前の yaml lint は Phase 2)。
-- ドローン対応・3D 表示 (three.js 導入済み) は Phase 2 以降。
+- ドローン対応・3D 表示 (three.js 導入済み)・costmap 表示は Phase 2 以降。

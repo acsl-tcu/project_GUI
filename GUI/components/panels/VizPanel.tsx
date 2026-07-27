@@ -8,6 +8,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import ROSLIB from "roslib";
 import { useTopic } from "@/lib/useRos";
 import { floorNodes, floorEdges, floorRooms } from "@/lib/floorMap";
+import { loadLocalFloorMap } from "@/lib/localMap";
 import CameraView from "@/components/CameraView";
 
 interface Vec3 {
@@ -81,6 +82,35 @@ const VizPanel: React.FC<VizPanelProps> = ({ ros, floor }) => {
   const [follow, setFollow] = useState(false);
   const [poseText, setPoseText] = useState("--");
   const [showCamera, setShowCamera] = useState(false);
+  // 地図の入手先: GUI サーバのローカル配信を優先し、無いときだけ /map を購読
+  const [localMap, setLocalMap] = useState<"loading" | "ok" | "none">("loading");
+  const [mapSource, setMapSource] = useState("--");
+
+  useEffect(() => {
+    let alive = true;
+    setLocalMap("loading");
+    void loadLocalFloorMap(floor).then((m) => {
+      if (!alive) return;
+      if (m) {
+        mapRef.current = {
+          canvas: m.canvas,
+          originX: m.originX,
+          originY: m.originY,
+          width: m.width,
+          height: m.height,
+          resolution: m.resolution,
+        };
+        viewRef.current.fitted = false;
+        setMapSource(`ローカル配信 (${m.sourceFile})`);
+        setLocalMap("ok");
+      } else {
+        setLocalMap("none");
+      }
+    });
+    return () => {
+      alive = false;
+    };
+  }, [floor]);
 
   useTopic<PoseWithCovMsg>(
     ros,
@@ -149,11 +179,12 @@ const VizPanel: React.FC<VizPanelProps> = ({ ros, floor }) => {
 
   useTopic<OccupancyGridMsg>(
     ros,
-    "/map",
+    localMap === "none" ? "/map" : "", // ローカル地図があれば購読しない (帯域節約)
     "nav_msgs/OccupancyGrid",
     (msg) => {
       const { width, height, resolution, origin } = msg.info;
       if (!width || !height) return;
+      setMapSource("/map トピック");
       const cv = document.createElement("canvas");
       cv.width = width;
       cv.height = height;
@@ -450,7 +481,7 @@ const VizPanel: React.FC<VizPanelProps> = ({ ros, floor }) => {
         <canvas ref={canvasRef} style={{ touchAction: "none", display: "block" }} />
       </div>
       <div className="text-xs text-slate-500">
-        表示: /map ・ /amcl_pose (青) ・ /rover_debug/ref_path (緑) ・
+        地図: {mapSource} ・ /amcl_pose (青) ・ /rover_debug/ref_path (緑) ・
         /rf_reference_point_stamped (黄) ・ /scan (赤, 推定姿勢基準の近似) ・
         floor_map {floor}F グラフ
       </div>

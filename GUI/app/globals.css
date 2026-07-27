@@ -2,20 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 運用 GUI のためダークテーマ固定 */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #020617;
+  --foreground: #e2e8f0;
+  --accent: #10b981;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: dark;
 }
 
 body {
   color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(1200px 600px at 85% -10%, rgba(16, 185, 129, 0.08), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(56, 189, 248, 0.06), transparent 60%),
+    var(--background);
+  min-height: 100vh;
+  font-family: var(--font-geist-sans), "Hiragino Sans", "Noto Sans JP", sans-serif;
+}
+
+code, pre, .font-mono {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* スクロールバー (iPad では非表示になるので PC 向け) */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #334155 transparent;
+}
+
+::selection {
+  background: rgba(16, 185, 129, 0.35);
+}
+
+/* 接続バッジの生存ドット */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  animation: pulse-dot 1.6s ease-in-out infinite;
 }

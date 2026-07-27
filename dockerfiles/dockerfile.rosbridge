@@ -1,0 +1,10 @@
+# 実験機 PC 用の rosbridge 専用イメージ (Node/Chromium なしの軽量版)。
+# `dup rosbridge` が dockerfile.<role> 規約で自動ビルドする。手動なら:
+#   docker build -f dockerfiles/dockerfile.rosbridge -t kasekiguchi/acsl-common:rosbridge${x86} .
+FROM ros:jazzy-ros-core-noble
+SHELL [ "/bin/bash", "-c" ]
+
+RUN apt-get update && apt-get install --no-install-recommends -y \
+  ros-jazzy-rosbridge-suite \
+  dumb-init \
+  && rm -rf /var/lib/apt/lists/*
