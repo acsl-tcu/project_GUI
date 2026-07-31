@@ -64,7 +64,11 @@ Docker/acsl 不要。git + Node.js 18+ (Raspberry Pi OS bookworm 等) だけで�
 # 2.1 リポジトリ取得
 cd ~
 git clone git@github.com:acsl-tcu/project_GUI.git
-git clone git@github.com:acsl-tcu/environment_bld10.git   # 地図 (occupancy) 用
+# 地図: 「環境共有アセット」規約 (~/ENV/<name>/repo) に従って配置。
+# acsl 環境があるホストなら `env_sync bld10` 一発。RPi5 (acsl なし) では手動 clone:
+mkdir -p ~/ENV/bld10
+git clone git@github.com:acsl-tcu/environment_bld10.git ~/ENV/bld10/repo
+# 以後の更新: git -C ~/ENV/bld10/repo pull
 
 # 2.2 ビルド (RPi5 で数分)
 cd ~/project_GUI/GUI
@@ -72,13 +76,13 @@ npm ci
 npm run build
 
 # 2.3 動作確認 (手動起動)
-GUI_MAP_DIR=$HOME/environment_bld10/occupancy npm run start -- -p 3000
+GUI_ENV=bld10 npm run start -- -p 3000     # → ~/ENV/bld10/repo/occupancy を配信
 # 別端末から:
 curl -s localhost:3000/api/floormap/4 | head -c 200   # 地図メタデータが返れば OK
 
 # 2.4 systemd 化 (自動起動)
 sed -e "s|@GUI_DIR@|$HOME/project_GUI/GUI|" \
-    -e "s|@GUI_MAP_DIR@|$HOME/environment_bld10/occupancy|" \
+    -e "s|@GUI_ENV@|bld10|" \
     ~/project_GUI/deploy/gui_web.service > ~/.config/systemd/user/gui_web.service
 systemctl --user daemon-reload
 systemctl --user enable --now gui_web.service
@@ -116,6 +120,7 @@ loginctl enable-linger "$USER"
 - **rosbridge は緑だがトピックが来ない** → RID 不一致。rosbridge コンテナは `~/GUI/.acsl/bashrc` の
   `ROS_DOMAIN_ID` で動く。ローバー (87) と揃える (`setrid` 後 `drestart rosbridge`)。
 - **agent NG** → user unit は SSH ログアウトで死ぬことがある → `loginctl enable-linger` を確認。
-- **地図が「/map トピック」表示** → RPi5 の `GUI_MAP_DIR` 未設定 or ファイル命名が
-  `*_<N>F(_slice).yaml` 規約に合っていない。
+- **地図が「/map トピック」表示** → RPi5 の `GUI_ENV`/`GUI_MAP_DIR` 未設定、
+  `~/ENV/<name>/repo` 未配備、またはファイル命名が `*_<N>F(_slice).yaml` 規約に
+  合っていない。
 - **iPad から実験機 PC に繋がらない** → AP のクライアント分離、または iPad が別サブネット。

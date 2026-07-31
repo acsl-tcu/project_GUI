@@ -40,5 +40,5 @@ GUI サーバ (RPi5 等) 単体で動かす場合は Docker 不要:
 
 ```bash
 cd GUI && npm ci && npm run build
-GUI_MAP_DIR=~/environment_bld10/occupancy npm run start -- -p 3000
+GUI_ENV=bld10 npm run start -- -p 3000   # 地図は ~/ENV/bld10/repo/occupancy から配信
 ```
