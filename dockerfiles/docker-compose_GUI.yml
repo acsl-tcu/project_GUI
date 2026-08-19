@@ -1,0 +1,5 @@
+services:
+  common:
+    working_dir: /root/GUI
+    volumes:
+      - ../../GUI:/root/GUI # パスは .acsl/docker (compose 起動ディレクトリ) 基準

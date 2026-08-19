@@ -4,11 +4,11 @@
 gpull
 sed -i "s|\$ACSL_WORK_DIR|$ACSL_WORK_DIR|g" project_launch*.sh
 sed -i "s|\$ACSL_ROS2_DIR|$ACSL_ROS2_DIR|g" project_launch*.sh
-sed -i "s|RID_IN_PAGE|$ROS_DOMAIN_ID|" GUI/app/page.tsx
+# RID はページ内 sed ではなく GUI の接続設定 (localStorage) で扱う
 
 dup GUI
 
-source $ACSL_ROS2_DIR/4_docker/common/scripts/super_echo
+source $ACSL_ROS2_DIR/docker/common/scripts/super_echo
 
 gecho Set autostart file in $HOME/.local/share/applications
 

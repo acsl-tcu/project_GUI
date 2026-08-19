@@ -1,0 +1,23 @@
+# ACSL GUI management agent (user unit テンプレート)
+# install.sh が @AGENT_PY@ / @ACSL_WORK_DIR@ を置換して
+# ~/.config/systemd/user/acsl-gui-agent.service に配置する。
+# (acsl_infra/nightly_audit/slack_control.service と同じ常駐パターン)
+
+[Unit]
+Description=ACSL GUI management agent (container ops / yaml editor / console relay)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+Environment=ACSL_WORK_DIR=@ACSL_WORK_DIR@
+# agent 起動時に rosbridge コンテナも上げる (実験機 PC 並置デプロイ用)
+Environment=AGENT_START_BRIDGE=1
+# 認証を掛ける場合はコメントを外す (GUI 側の接続設定にも同じ値を入れる)
+# Environment=AGENT_TOKEN=changeme
+ExecStart=/usr/bin/env python3 @AGENT_PY@
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

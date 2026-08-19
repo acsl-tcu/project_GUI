@@ -21,7 +21,7 @@ class MAIN(Node):
             self.bos_console_callback,
             qos_profile_sensor_data,
         )
-        self.pub = self.robot.create_publisher(
+        self.pub = self.create_publisher(
             Int8MultiArray,
             "/Robot" + rid + "/console2robot",
             qos_profile_sensor_data,
